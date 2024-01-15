@@ -1,13 +1,56 @@
-package algorthims.MaximumMatching;
+package algorithms.MaximumMatching;
 
 import java.util.*;
 
-import algorthims.Greedy.GreedyMatching;
+import algorithms.Greedy.GreedyMatching;
 import graph.Graph;
 import graph.Blossom;
+import graph.Forest;
 import graph.MetaNode;
+import useful.Duo;
 
 public class EdmondMatching {
+    public static int solution(int[] banana_list) {
+        int len = banana_list.length;
+
+        Graph<Integer> graph = new Graph<>();
+
+        for (int i = 0; i < len; i++ ) {
+            graph.addNode(i);
+        }
+
+        for (int i = 0; i < len; i++) {
+            for (int j = i + 1; j < len; j++) {
+                if (validParing(banana_list[i], banana_list[j])) {
+                    graph.addEdge(i, j);
+                }
+            }
+        }
+
+        int mSize = EdMatching(graph).numEdges();
+        //System.out.println("Clouds size:" + mSize);
+        return mSize;
+    }
+
+    public static boolean validParing(int x, int y) {
+        // if their sum dividied by the gcd is odd it will loop
+        // (2,4) passes test but (1,5) fails
+        // when will (x + y) / gcd(x, y) always be even? when x + y is a power of 2
+        int num = (x + y) / gcd(x, y);
+        return ((num - 1) & num) != 0;
+    }
+
+    public static int gcd(int x , int y) {
+        if (y == 0) {
+            return x;
+        }
+        return gcd(y, x % y);
+    }
+
+
+    
+
+
     public static <T> Graph<T> EdMatching(Graph<T> graph){
         if (graph.isEmpty()) {
             return new Graph<>();
@@ -36,7 +79,7 @@ public class EdmondMatching {
      */
     public static <T> List<T> findAugmentingPath(Graph<T> graph, Graph<T> matching) {
         Map<T, MetaNode<T>> forest = new HashMap<>();
-        Queue<Edge<T>> checkEdges = new LinkedList<>();
+        Queue<Duo<T>> checkEdges = new LinkedList<>();
 
         // add all exposed verticies to alternating tree
         for (T curr : graph) {
@@ -47,15 +90,15 @@ public class EdmondMatching {
             //mark all edges
             
             for (T vert : graph.neighbors(curr)) {
-                checkEdges.add(new Edge<T>(curr, vert));
+                checkEdges.add(new Duo<T>(curr, vert));
             }
             
         }
 
         while (!checkEdges.isEmpty()) {
-            Edge<T> currEdge = checkEdges.remove();
-            T v = currEdge.start;
-            T w = currEdge.end;
+            Duo<T> currEdge = checkEdges.remove();
+            T v = currEdge.getOne();
+            T w = currEdge.getTwo();
             if (matching.containsEdge(v, w)) {
                     continue;
             }
@@ -89,24 +132,11 @@ public class EdmondMatching {
         return null;
     }
 
-    /**
-     * returns the path from a given node to its root in the forest
-     * @param <T>
-     * @param forest forest in question
-     * @param node node being considered
-     * @return path as a list from node to root
-     */
-    public static <T> List<T> pathToRoot(Map<T, MetaNode<T>> forest, T node) {
-        List<T> path = new ArrayList<>();
-        for (T curr = node; curr != null; curr = forest.get(curr).parent) {
-            path.add(curr);
-        }
-        return path;
-    }
+    
     
     public static <T> T lowestCommonAncestor(Map<T, MetaNode<T>> forest, T v, T w) {
-        List<T> vPath = pathToRoot(forest, v);
-        List<T> wPath = pathToRoot(forest, w);
+        List<T> vPath = Forest.pathToRoot(forest, v);
+        List<T> wPath = Forest.pathToRoot(forest, w);
         int vlen = vPath.size();
         int wlen = wPath.size();
         for (int i = 1; i < Math.min(vlen, wlen); i++ ) {
@@ -136,7 +166,7 @@ public class EdmondMatching {
      * @param v one end point of the edge
      * @param w other end point of the edge
      */
-    public static <T> void addToForest(Graph<T> graph, Graph<T> matching, Map<T, MetaNode<T>> forest, Queue<Edge<T>> checkEdges, T v, T w) {
+    public static <T> void addToForest(Graph<T> graph, Graph<T> matching, Map<T, MetaNode<T>> forest, Queue<Duo<T>> checkEdges, T v, T w) {
         //System.out.println("add to forest: " + v + " | " + w);
         T x = matching.neighbors(w).iterator().next();
         forest.put(w, new MetaNode<T>(v, forest.get(v).root, false));
@@ -146,7 +176,7 @@ public class EdmondMatching {
 
         
         for (T neighbor : graph.neighbors(x)) {
-            checkEdges.add(new Edge<T>(x, neighbor));
+            checkEdges.add(new Duo<T>(x, neighbor));
         }
         
     }

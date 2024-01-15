@@ -34,8 +34,8 @@ public class Blossom<T> {
      * @return the blossom as a Blossom class
      */
     public static <T> Blossom<T> findBlossom(Map<T, MetaNode<T>> forest, T v, T w) {
-        List<T> vPath = pathToRoot(forest, v);
-        List<T> wPath = pathToRoot(forest, w);
+        List<T> vPath = Forest.pathToRoot(forest, v);
+        List<T> wPath = Forest.pathToRoot(forest, w);
         int vlen = vPath.size();
         int wlen = wPath.size();
         int lca = 1;

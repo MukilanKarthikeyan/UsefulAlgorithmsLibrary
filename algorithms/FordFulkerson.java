@@ -1,4 +1,4 @@
-package algorthims;
+package algorithms;
 
 public class FordFulkerson {
     

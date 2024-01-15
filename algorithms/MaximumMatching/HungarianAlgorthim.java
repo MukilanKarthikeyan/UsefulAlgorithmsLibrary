@@ -1,4 +1,4 @@
-package algorthims.MaximumMatching;
+package algorithms.MaximumMatching;
 
 public class HungarianAlgorthim {
     

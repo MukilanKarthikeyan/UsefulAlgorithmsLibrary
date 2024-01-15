@@ -1,4 +1,4 @@
-package algorthims.Greedy;
+package algorithms.Greedy;
 
 import graph.Graph;
 
