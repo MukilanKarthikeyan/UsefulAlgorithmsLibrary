@@ -16,7 +16,7 @@ public class Fraction {
         return gcd(b, a % b);
     }
 
-    Fraction(long num, long denom) throws IllegalArgumentException{
+    public Fraction(long num, long denom) throws IllegalArgumentException{
         if (denom == 0) {
             throw new IllegalArgumentException("invalid denominator: can not be 0");
         } else 
@@ -26,7 +26,7 @@ public class Fraction {
         simplifiy();
     }
 
-    Fraction() {
+    public Fraction() {
         this(0, 1);
     }
 
