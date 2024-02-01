@@ -1,53 +1,66 @@
-package useful;
+package dataTypes;
 
-
-public class Fraction {
+public class Fraction implements Comparable<Fraction>{
     public long num;
-    public long denom;
-
-    private long gcd(long a, long b) {
-        //sanitize input to support negative numbers
-        a = Math.abs(a);
-        b = Math.abs(b);
-
-        if (b == 0) {
-            return a;
-        }
-        return gcd(b, a % b);
-    }
+    public long denom;    
 
     public Fraction(long num, long denom) throws IllegalArgumentException{
         if (denom == 0) {
             throw new IllegalArgumentException("invalid denominator: can not be 0");
-        } else 
+        } 
         
         this.num = num;
         this.denom = denom;
         simplifiy();
     }
 
+    public Fraction(long num) {
+        this(num, 1);
+    }
+
     public Fraction() {
         this(0, 1);
     }
+
+
 
     public void simplifiy() {
         if (num == 0) {
             num = 0;
             denom = 1;
         } else {
-            int sign = 1;
-            if (num < 0) {
-                sign *= -1;
-                num *= -1;
-            }
-            if (denom < 0) {
-                sign *= -1;
-                denom *= -1;
-            }
-            long common = gcd(num, denom); 
-            num = num / common * sign;
+            long common = MathTools.gcd(num, denom); 
+            num = num / common;
             denom = denom / common;
         }
+        correctSign();
+    }
+    
+    public void correctSign() {
+        if (denom < 0) {
+            num *= -1;
+            denom *= -1;
+        }
+    }
+
+    public long getSign() {
+        correctSign();
+        return num;  
+    }
+
+    public boolean eq(int a) {
+        simplifiy();
+        if (denom != 1) {
+            return false;
+        }
+        return num == a;
+    }
+
+    public Fraction reciprcal() {
+        if (num == 0) {
+            return new Fraction();
+        }
+        return new Fraction(this.denom, this.num);
     }
 
     public static Fraction add(Fraction a, Fraction b) {
@@ -73,6 +86,33 @@ public class Fraction {
         long d = (a.denom * b.num);
         return new Fraction(n, d);
     }
+
+
+    public static Fraction add(Fraction a, long b) {
+        long n = a.num + (b * a.denom);
+        long d = a.denom;
+        return new Fraction(n, d);
+    }
+
+    public static Fraction sub(Fraction a, long b) {
+        long n = a.num - (b * a.denom);
+        long d = a.denom;
+        return new Fraction(n, d);
+    }
+
+    public static Fraction multiply(Fraction a, long b) {
+        long n = a.num * b;
+        long d = a.denom;
+        return new Fraction(n, d);
+    }
+
+    public static Fraction divide(Fraction a, long b) {
+        long n = a.num;
+        long d = a.denom * b;
+        return new Fraction(n, d);
+    }
+
+
     
     // changes current fraction object 
     public void add(Fraction a) {
@@ -118,6 +158,18 @@ public class Fraction {
     public void divide(long a) {
         this.denom *= a;
         simplifiy();
+    }
+
+    @Override
+    public int compareTo(Fraction o) {
+        // TODO Auto-generated method stub
+        long n = Fraction.sub(this, o).num;
+        if (n == 0) {
+            return 0;
+        } else if (n > 0) {
+            return 1;
+        } 
+        return -1;
     }
     
 }

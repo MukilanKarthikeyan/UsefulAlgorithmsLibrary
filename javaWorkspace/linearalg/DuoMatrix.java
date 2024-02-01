@@ -1,14 +1,14 @@
 package linearalg;
 import java.util.*;
 
-import useful.Duo;
+import dataTypes.Duo;
 
 public  class  DuoMatrix {
     // Duo will represent a fraction
     Duo<Integer>[][] matrix;
 
     public DuoMatrix(int m, int n, Duo<Integer> con) {
-        matrix = new Duo<Integer>[m][n];
+        matrix = (Duo<Integer>[][]) new Object[m][n];
 
         for (int i = 0; i < m; i++) {
             for (int j = 0; j < n; j++) {

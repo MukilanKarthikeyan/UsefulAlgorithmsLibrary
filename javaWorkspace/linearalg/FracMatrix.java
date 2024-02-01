@@ -3,7 +3,7 @@ package linearalg;
 import java.util.ArrayList;
 import java.util.List;
 
-import useful.Fraction;
+import dataTypes.Fraction;
 
 public class FracMatrix {
     
@@ -72,7 +72,6 @@ public class FracMatrix {
         }
     }
 
-
     private void rowsAndColumns() {
         for (int i = 0; i < m; i++) {
             rows.add(new ArrayList<>());
@@ -116,6 +115,8 @@ public class FracMatrix {
         return matrix[i][j];
     }
 
+
+    //Library Methods
     public static Fraction dotProd(List<Fraction> a, List<Fraction> b) {
         Fraction res = new Fraction();
 
@@ -149,6 +150,9 @@ public class FracMatrix {
     //TODO: multiply matrix by vector
     //TODO: calculate row reduced echelon form
 
+    //Mutators
+    //METHODS that act ON this Matrix 
+
 
     public void swapRows(int i, int j) {
         for (int k = 0; k < n; k++) {
@@ -178,23 +182,72 @@ public class FracMatrix {
         }
     }
 
-    public void subtractRowFrom(int subtrahend, int minuend) {
+    public void subtractRowFrom(int subtrahend, int minuend, Fraction scale) {
         for (int k = 0; k < n; k++) {
-            matrix[minuend][k].sub(matrix[subtrahend][k]);
+            matrix[minuend][k].sub(Fraction.multiply(matrix[subtrahend][k], scale));
         }
     }
     
-    public void subtractColFrom(int subtrahend, int minuend) {
+    public void subtractColFrom(int subtrahend, int minuend, Fraction scale) {
         for (int k = 0; k < m; k++) {
-            matrix[k][minuend].sub(matrix[k][subtrahend]);
+            matrix[k][minuend].sub(Fraction.multiply(matrix[k][subtrahend], scale));
         }
+    }
+
+    public FracMatrix subMatrix(int startRow, int startCol, int m, int n) {
+        if (startRow + m > this.m || startCol + n > this.n) {
+            throw new IllegalArgumentException("diemensions out of index of matrix");
+        }
+
+        FracMatrix sub = new FracMatrix(m, n);
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                sub.setVal(i, j, this.matrix[startRow + i][startCol + j]);
+            }
+        }
+        return sub;
+    }
+
+
+    private int getfirstNonZeroIndex(int column) {
+        for (int i = 0; i < m; i++) {
+            if (matrix[i][column].eq(0)) {
+                return i;
+            }
+        }
+        return -1;
     }
 
     public void reduce() {
-        for (int i = 0; i < m; i++) {
-            
+        int pivots = 0;
+        Fraction detScl = new Fraction(1);
+        for (int j = 0; j < n; j++) {
+            int indx = getfirstNonZeroIndex(j);
+            int curr = pivots;
+            if (indx != pivots) {
+                swapRows(indx, curr);
+                detScl.multiply(-1);
+                pivots++;
+            }
+
+            scaleRow(curr, matrix[curr][j].reciprcal());
+            detScl.multiply(matrix[curr][j].reciprcal());
+
+            for (int i = curr; i < m; i++) {
+                subtractRowFrom(curr, i, Fraction.multiply(matrix[i][j], -1));
+            }
+
         }
     }
 
+    /*
+    public Fraction determinant() {
+
+    }
+
+    public Fraction cofactor() {
+
+    }
+*/
 
 }

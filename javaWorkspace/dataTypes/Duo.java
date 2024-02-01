@@ -1,4 +1,4 @@
-package useful;
+package dataTypes;
 
 public class Duo<T> {
     T one;
