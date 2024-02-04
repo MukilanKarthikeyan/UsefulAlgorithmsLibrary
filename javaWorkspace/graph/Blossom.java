@@ -65,7 +65,7 @@ public class Blossom<T> {
      * @param blossom the blossom that the graph was been contracted by 
      * @return an augmenting path to the uncontracted graph
      */
-    public static <T> List<T> liftPath(List<T> path, Graph<T> graph, Blossom<T> blossom) {
+    public static <T> List<T> liftPath(List<T> path, EdmondGraph<T> graph, Blossom<T> blossom) {
         //locate blossom
         if (path == null) {
             return path;
@@ -118,8 +118,8 @@ public class Blossom<T> {
      * @param blossom list of nodes that make up the blossom
      * @return graph with the blossom contracted into a single supernode
      */
-    public static <T> Graph<T> contractBlossom(Graph<T> graph, Blossom<T> blossom) {
-        Graph<T> contracted = new Graph<T>();
+    public static <T> EdmondGraph<T> contractBlossom(EdmondGraph<T> graph, Blossom<T> blossom) {
+        EdmondGraph<T> contracted = new EdmondGraph<T>();
         contracted.addNode(blossom.root);
 
         for (T node : graph) {

@@ -1,6 +1,6 @@
 package algorithms.Greedy;
 
-import graph.Graph;
+import graph.EdmondGraph;
 
 public class GreedyMatching {
     /**
@@ -10,9 +10,9 @@ public class GreedyMatching {
      * @param graph graph to find a matching on
      * @return a maximal matching of graph as a Graph<T> type
      */
-    public static <T> Graph<T> greedyMatchingByDegree(Graph<T> graph) {
-        Graph<T> graphCopy = graph.deepCopy();
-        Graph<T> greedyMatch = new Graph<>();
+    public static <T> EdmondGraph<T> greedyMatchingByDegree(EdmondGraph<T> graph) {
+        EdmondGraph<T> graphCopy = graph.deepCopy();
+        EdmondGraph<T> greedyMatch = new EdmondGraph<>();
         for (T node : graphCopy) {
             greedyMatch.addNode(node);
         }

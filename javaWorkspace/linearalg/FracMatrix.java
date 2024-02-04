@@ -3,6 +3,8 @@ package linearalg;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.management.InvalidAttributeValueException;
+
 import dataTypes.Fraction;
 
 public class FracMatrix {
@@ -19,8 +21,6 @@ public class FracMatrix {
 
 
     public FracMatrix(int m, int n, List<Fraction> inputStream) throws IllegalArgumentException, NullPointerException{
-
-
         if (inputStream == null) {
             // throwing null pointer or illegal argument?
             throw new NullPointerException("");
@@ -72,6 +72,20 @@ public class FracMatrix {
         }
     }
 
+    public FracMatrix(FracMatrix toCopy) {
+        int[] dim = toCopy.getDim();
+        
+        this.m = dim[0];
+        this.n = dim[1];
+
+        matrix = new Fraction[m][n];
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                matrix[i][j] = toCopy.getVal(i, j);
+            }
+        }
+    }
+
     private void rowsAndColumns() {
         for (int i = 0; i < m; i++) {
             rows.add(new ArrayList<>());
@@ -87,6 +101,10 @@ public class FracMatrix {
             }
         }
 
+    }
+
+    public int[] getDim() {
+        return new int[]{m, n};
     }
 
     public List<Fraction> getRow(int i) {
@@ -218,7 +236,9 @@ public class FracMatrix {
         return -1;
     }
 
-    public void reduce() {
+    public void rowReduce() {
+        //preserve the orignial and return the modified.
+        FracMatrix orignal = new FracMatrix(this);
         int pivots = 0;
         Fraction detScl = new Fraction(1);
         for (int j = 0; j < n; j++) {
@@ -238,6 +258,22 @@ public class FracMatrix {
             }
 
         }
+        //TODO: reconsider method design
+        //return orginal;
+    }
+
+    public Fraction trace() throws InvalidAttributeValueException{
+        if (m != n) {
+            throw new InvalidAttributeValueException("matrix is not square");
+        }
+
+        Fraction tr = new Fraction();
+
+        for (int i = 0; i < m; i++) {
+            tr.add(matrix[i][i]);
+        }
+
+        return tr;
     }
 
     /*

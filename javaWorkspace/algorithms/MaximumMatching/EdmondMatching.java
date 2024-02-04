@@ -3,17 +3,16 @@ package algorithms.MaximumMatching;
 import java.util.*;
 
 import algorithms.Greedy.GreedyMatching;
-import graph.Graph;
+import graph.EdmondGraph;
 import graph.Blossom;
 import graph.Forest;
 import graph.MetaNode;
-import useful.Duo;
-
+import dataTypes.Duo;
 public class EdmondMatching {
     public static int solution(int[] banana_list) {
         int len = banana_list.length;
 
-        Graph<Integer> graph = new Graph<>();
+        EdmondGraph<Integer> graph = new EdmondGraph<>();
 
         for (int i = 0; i < len; i++ ) {
             graph.addNode(i);
@@ -51,13 +50,13 @@ public class EdmondMatching {
     
 
 
-    public static <T> Graph<T> EdMatching(Graph<T> graph){
+    public static <T> EdmondGraph<T> EdMatching(EdmondGraph<T> graph){
         if (graph.isEmpty()) {
-            return new Graph<>();
+            return new EdmondGraph<>();
         }
 
         //speed up the algorhtim by providing a greedy matching to start from
-        Graph<T> matching = GreedyMatching.greedyMatchingByDegree(graph);// this alone will fail for speciric odd cycles 
+        EdmondGraph<T> matching = GreedyMatching.greedyMatchingByDegree(graph);// this alone will fail for speciric odd cycles 
         
         //keep finding augmenting paths until none exist
         //Berge's lemma
@@ -77,7 +76,7 @@ public class EdmondMatching {
      * @param matching current matching on the graph
      * @return an augmenting path for the matching on the graph
      */
-    public static <T> List<T> findAugmentingPath(Graph<T> graph, Graph<T> matching) {
+    public static <T> List<T> findAugmentingPath(EdmondGraph<T> graph, EdmondGraph<T> matching) {
         Map<T, MetaNode<T>> forest = new HashMap<>();
         Queue<Duo<T>> checkEdges = new LinkedList<>();
 
@@ -147,7 +146,7 @@ public class EdmondMatching {
         return null;
     }
 
-    public static <T> List<T> blossomRecursion(Graph<T> graph, Graph<T> matching, Map<T, MetaNode<T>> forest, T v, T w) {
+    public static <T> List<T> blossomRecursion(EdmondGraph<T> graph, EdmondGraph<T> matching, Map<T, MetaNode<T>> forest, T v, T w) {
         //graph only has an augmenting path if the contracted graph has an augmenting path
         Blossom<T> blossom = Blossom.findBlossom(forest, v, w);
         List<T> path = findAugmentingPath(Blossom.contractBlossom(graph, blossom), Blossom.contractBlossom(matching, blossom));
@@ -166,7 +165,7 @@ public class EdmondMatching {
      * @param v one end point of the edge
      * @param w other end point of the edge
      */
-    public static <T> void addToForest(Graph<T> graph, Graph<T> matching, Map<T, MetaNode<T>> forest, Queue<Duo<T>> checkEdges, T v, T w) {
+    public static <T> void addToForest(EdmondGraph<T> graph, EdmondGraph<T> matching, Map<T, MetaNode<T>> forest, Queue<Duo<T>> checkEdges, T v, T w) {
         //System.out.println("add to forest: " + v + " | " + w);
         T x = matching.neighbors(w).iterator().next();
         forest.put(w, new MetaNode<T>(v, forest.get(v).root, false));
@@ -188,7 +187,7 @@ public class EdmondMatching {
      * @param matching the current matching
      * @param augPath alternating path to augment the given matching
      */
-    public static <T> void updateMatching(Graph<T> matching, List<T> augPath) {
+    public static <T> void updateMatching(EdmondGraph<T> matching, List<T> augPath) {
         for (int i = 0; i < augPath.size() - 1; i++) {
             if (matching.containsEdge(augPath.get(i), augPath.get(i + 1))) {
                 //System.out.print("remove edge");

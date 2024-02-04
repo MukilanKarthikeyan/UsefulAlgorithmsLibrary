@@ -52,8 +52,11 @@ class Fraction {
     }
 
     long long gcd(long long a, long long b) {
-        a *= (a < 0) ? -1 : 1;
-        b *= (b < 0) ? -1 : 1;
+        a = abs(a);
+        b = abs(b);
+
+        //a *= (a < 0) ? -1 : 1;
+        //b *= (b < 0) ? -1 : 1;
 
         if (b == 0) {
             return a;
@@ -62,6 +65,20 @@ class Fraction {
 
     }
 
+    long long lcm(long long a, long long b) {
+        return (abs(a) * abs(b)) / gcd(a, b);
+    }
+    
+    Fraction simplify(Fraction const& a) {
+        long long com = gcd(a.num, a.denom);
+        long long n = a.num / com;
+        long long d = a.denom / com;
+        if (d > 0) {
+            n *= -1;
+            d *= -1;
+        }
+        return Fraction(n, d);
+    }
 
     Fraction operator+=(Fraction const& a) {
         num = (num * a.denom) + (a.num * denom);
@@ -127,4 +144,27 @@ class Fraction {
         return res;
     }
 
+
+    bool operator==(Fraction const& a) {
+       
+    }
+
+    bool operator<(Fraction const& a) {
+       
+    }
+
+    bool operator>(Fraction const& a) {
+       
+    }
+
+    bool operator<=(Fraction const& a) {
+       
+    }
+
+    bool operator>=(Fraction const& a) {
+       
+    }
+    bool operator!=(Fraction const& a) {
+
+    }
 };

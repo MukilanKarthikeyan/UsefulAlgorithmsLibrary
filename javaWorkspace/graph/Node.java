@@ -9,4 +9,8 @@ public class Node<T> {
     List<Node<T>> childern;
     //undodrded set of childern;
     HashSet<Node<T>> childernSet; 
+    public Node(T data) {
+        this.data = data;
+    }
+
 }

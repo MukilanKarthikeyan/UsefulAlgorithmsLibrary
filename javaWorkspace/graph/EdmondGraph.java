@@ -7,11 +7,11 @@ import java.util.Map;
 import java.util.Set;
 
 
-public class Graph<T> implements Iterable<T> {
+public class EdmondGraph<T> implements Iterable<T> {
     //using adjacney set here (epecting sparce graph) but it essentially become an adjaceny matrix
     private Map<T, Set<T>> undirGraph;
     
-    public Graph() {
+    public EdmondGraph() {
         this.undirGraph = new HashMap<T, Set<T>>();
     }
 
@@ -92,8 +92,8 @@ public class Graph<T> implements Iterable<T> {
         return undirGraph.isEmpty();
     }
 
-    public Graph<T> deepCopy() {
-        Graph<T> copy = new Graph<>();
+    public EdmondGraph<T> deepCopy() {
+        EdmondGraph<T> copy = new EdmondGraph<>();
         for (T node : undirGraph.keySet()) {
             copy.addNode(node);
         }
